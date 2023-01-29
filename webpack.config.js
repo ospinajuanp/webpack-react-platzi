@@ -1,16 +1,24 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
     module.exports = {
         entry: './src/index.js',
         output: {
             path: path.resolve(__dirname,'dist'), //(el path de salida carpeta dist-distribution)
             filename: 'main.js', //(nombre del archivo resultante)
+            publicPath: "/", //(el path de nuestro carpeta raíz)
         },
-        
+        mode:'production',
         resolve:{
-            extensions:['.js','.jsx'] //(aquí colocaremos todas las extensiones que vamos utilizando en nuestro proyecto)
+            extensions:['.js','.jsx'], //(aquí colocaremos todas las extensiones que vamos utilizando en nuestro proyecto)
+            alias:{
+                '@components':path.resolve(__dirname,'src/components/'),
+                '@style':path.resolve(__dirname,'src/style/'),
+            },
         },
         module :{
             rules: [
@@ -40,8 +48,16 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
             }),
             new MiniCssExtractPlugin({
                 filename:'[name].css'
-            })
+            }),
+            new CleanWebpackPlugin(), // agregamos este plugin para limpiar archivos
         ],
+        optimization:{
+            minimize : true,
+            minimizer:[
+                new CssMinimizerPlugin(),
+                new TerserPlugin()
+            ]
+        },
         devServer: { // configuración para el server
     		static: path.join(__dirname, 'dist'), // ruta de nuestro dist
             compress: true, // si deseamos comprimir
