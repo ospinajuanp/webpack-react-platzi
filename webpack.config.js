@@ -1,4 +1,6 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
     module.exports = {
         entry: './src/index.js',
         output: {
@@ -12,12 +14,22 @@ const path = require('path');
         module :{
             rules: [
                 {
-                test: /\.(m?js|jsx)$/, //(Test declara que extensión de archivos aplicara el loader)
-                exclude: /node_modules/, //(Exclude permite omitir archivos o carpetas especificas)
-                use: {loader: "babel-loader"}, //(Use es un arreglo u objeto donde dices que loader aplicaras)
+                    test: /\.(m?js|jsx)$/, //(Test declara que extensión de archivos aplicara el loader)
+                    exclude: /node_modules/, //(Exclude permite omitir archivos o carpetas especificas)
+                    use: {loader: "babel-loader"}, //(Use es un arreglo u objeto donde dices que loader aplicaras)
+                },
+                {
+                    test: /\.html$/,
+                    use:{loader:'html-loader'}
                 }
             ]
         },
+        plugins:[
+            new HtmlWebpackPlugin({
+                template:'./public/index.html',
+                filename:'./index.html'
+            })
+        ],
         devServer: { // configuración para el server
     		static: path.join(__dirname, 'dist'), // ruta de nuestro dist
             compress: true, // si deseamos comprimir
