@@ -12,7 +12,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
             filename: 'main.js', //(nombre del archivo resultante)
             publicPath: "/", //(el path de nuestro carpeta raíz)
         },
-        mode:'production',
+        mode:'development',
         resolve:{
             extensions:['.js','.jsx'], //(aquí colocaremos todas las extensiones que vamos utilizando en nuestro proyecto)
             alias:{
@@ -51,11 +51,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
             }),
             new CleanWebpackPlugin(), // agregamos este plugin para limpiar archivos
         ],
-        optimization:{
-            minimize : true,
-            minimizer:[
-                new CssMinimizerPlugin(),
-                new TerserPlugin()
-            ]
+        devServer: { // configuración para el server
+    		static: path.join(__dirname, 'dist'), // ruta de nuestro dist
+            compress: true, // si deseamos comprimir
+    		historyApiFallback: true, // si queremos tener un historial
+    		port: 3006, // el puerto que deseamos utilizar
+    		open: true, // para abrir nuestro navegar automáticamente 
         }
     }
